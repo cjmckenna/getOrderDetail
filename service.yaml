@@ -1,0 +1,25 @@
+---
+apiVersion: "v1"
+kind: "Service"
+metadata:
+  name: "getorderdetails"
+  namespace: "classicmodels"
+spec:
+  allocateLoadBalancerNodePorts: true
+  clusterIP: "10.106.163.215"
+  clusterIPs:
+  - "10.106.163.215"
+  externalTrafficPolicy: "Cluster"
+  internalTrafficPolicy: "Cluster"
+  ipFamilies:
+  - "IPv4"
+  ipFamilyPolicy: "SingleStack"
+  ports:
+  - nodePort: 30362
+    port: 80
+    protocol: "TCP"
+    targetPort: 5000
+  selector:
+    app: "getorderdetails"
+  sessionAffinity: "None"
+  type: "LoadBalancer"

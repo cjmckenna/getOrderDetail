@@ -1,0 +1,52 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: getorderdetails
+  namespace: classicmodels
+  labels:
+    app: getorderdetails
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: getorderdetails
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 3
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: getorderdetails
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - getorderdetails
+            topologyKey: kubernetes.io/hostname
+      containers:
+      - image: 192.168.0.50/classicmodels/getorderdetail:latest
+        imagePullPolicy: Always
+        name: getorderdetails
+        ports:
+        - containerPort: 80
+        env:
+          - name: MY_NODE_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: spec.nodeName
+        resources:
+          limits:
+            cpu: 200m
+            memory: 200Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+
